@@ -35,12 +35,12 @@ function end() {
 function draw(e) {
   if(!painting) return;
   ctx.lineWidth = 10
+  ctx.strokeStyle = 'teal'
   ctx.lineCap = 'round'
   ctx.lineTo(e.clientX, e.clientY)
   ctx.stroke()
   ctx.beginPath()
   ctx.moveTo(e.clientX, e.clientY)
-  ctx.strokeStyle = 'teal'
 }
 //Event listeners
 

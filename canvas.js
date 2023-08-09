@@ -10,6 +10,13 @@ const brushCtx = b.getContext('2d');
 const triangleCtx = t.getContext('2d');
 const circleCtx = c.getContext('2d');
 
+// Button click event listeners
+const brushButton = document.querySelector('#brushButton');
+const rectangleButton = document.querySelector('#rectangleSwitch');
+const circleButton = document.querySelector('#circleSwitch');
+const triangleButton = document.querySelector('#triangleSwitch');
+const lineButton = document.querySelector('#lineSwitch');
+
 // Resizing 
 r.height = window.innerHeight;
 r.width = window.innerWidth;
@@ -52,6 +59,17 @@ let circleStartX, circleStartY;
 
 // Variables for triangle drawing
 let triangleStartX, triangleStartY;
+
+const canvasButtons = [brushButton, rectangleButton, circleButton, triangleButton, lineButton];
+
+// Function to deactivate all canvas buttons except the clicked one
+function deactivateAllCanvasButtons(clickedButton) {
+  canvasButtons.forEach(button => {
+    if (button !== clickedButton) {
+      button.checked = false;
+    }
+  });
+}
 
 function setActiveCanvas(canvas, style) {
   activeCanvas.style.zIndex = 0; // Set z-index of the previous active canvas to 0
@@ -303,12 +321,6 @@ function draw(e) {
   }
 }
 
-// Button click event listeners
-const brushButton = document.querySelector('#brushButton');
-const rectangleButton = document.querySelector('#rectangleSwitch');
-const circleButton = document.querySelector('#circleSwitch');
-const triangleButton = document.querySelector('#triangleSwitch');
-const lineButton = document.querySelector('#lineSwitch');
 
 // Clear all canvases when switching draw styles
 function clearCanvases() {
@@ -320,26 +332,31 @@ function clearCanvases() {
 }
 
 brushButton.addEventListener('click', () => {
+  deactivateAllCanvasButtons(brushButton);
   setActiveCanvas(b, 'brush');
   drawStyle = 'brush';
 });
 
 rectangleButton.addEventListener('click', () => {
+  deactivateAllCanvasButtons(rectangleButton);
   setActiveCanvas(r, 'rectangle');
   drawStyle = 'rectangle';
 });
 
 circleButton.addEventListener('click', () => {
+  deactivateAllCanvasButtons(circleButton);
   setActiveCanvas(c, 'circle');
   drawStyle = 'circle';
 });
 
 triangleButton.addEventListener('click', () => {
+  deactivateAllCanvasButtons(triangleButton);
   setActiveCanvas(t, 'triangle');
   drawStyle = 'triangle';
 });
 
 lineButton.addEventListener('click', () => {
+  deactivateAllCanvasButtons(lineButton);
   setActiveCanvas(l, 'line');
   drawStyle = 'line';
 });

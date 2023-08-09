@@ -2,9 +2,72 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  overflow: hidden;
 }
 
-#canvas {
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #f0f0f0;
+}
+
+.canvas-container {
+  position: relative; /* Container needs to be positioned */
+  width: 100%;
+  height: 100%;
+}
+
+canvas {
+  position: absolute; /* Canvas elements will be positioned absolutely within the container */
+  top: 0;
+  left: 0;
   border: 2px solid black;
+}
+
+/* Set z-index for the canvases based on your requirement */
+#brushCanvas {
+  z-index: 1;
+}
+#rectangleCanvas {
+  z-index: 2;
+}
+#lineCanvas {
+  z-index: 3;
+}
+#circleCanvas {
+  z-index: 4;
+}
+#triangleCanvas {
+  z-index: 5;
+}
+
+.switches {
+  position: absolute;
+  top: 20px; /* Adjust as needed */
+  left: 20px; /* Adjust as needed */
+  z-index: 10; /* Place the switches above the canvases */
+  /* Additional styling for the switches */
+}
+.switch {
+  display: flex;
+  align-items: center;
+}
+
+.switch-input {
+  display: none;
+}
+
+.switch-label {
+  background-color: #ccc;
+  padding: 6px 12px;
+  border-radius: 20px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.switch-input:checked + .switch-label {
+  background-color: teal;
+  color: white;
 }

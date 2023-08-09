@@ -8,7 +8,37 @@
   <title>Canvas draw</title>
 </head>
 <body>
-  <canvas id="canvas"></canvas>
-  <script src="canvas.js"></script>
-</body>
-</html>
+  <div class="container">
+
+    <canvas id="rectangleCanvas"></canvas>
+    <canvas id="brushCanvas"></canvas>
+    <canvas id="triangleCanvas"></canvas>
+    <canvas id="lineCanvas"></canvas>
+    <canvas id="circleCanvas"></canvas>
+  </div>
+
+    <div class="switches">
+      <label class="switch">
+        <input type="checkbox" id="brushButton" class="switch-input">
+        <span class="switch-label">Brush</span>
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="rectangleSwitch" class="switch-input">
+        <span class="switch-label">Rectangle</span>
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="circleSwitch" class="switch-input">
+        <span class="switch-label">Circle</span>
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="triangleSwitch" class="switch-input">
+        <span class="switch-label">Triangle</span>
+      </label>
+      <label class="switch">
+        <input type="checkbox" id="lineSwitch" class="switch-input">
+        <span class="switch-label">Line</span>
+      </label>
+    </div>
+    <script src="canvas.js"></script>
+  </body>
+  </html>

@@ -322,14 +322,24 @@ function draw(e) {
 }
 
 
-// Clear all canvases when switching draw styles
 function clearCanvases() {
   rectangleCtx.clearRect(0, 0, r.width, r.height);
   lineCtx.clearRect(0, 0, l.width, l.height);
   brushCtx.clearRect(0, 0, b.width, b.height);
   triangleCtx.clearRect(0, 0, t.width, t.height);
   circleCtx.clearRect(0, 0, c.width, c.height);
+
+  for (const style in shapesByCanvas) {
+    shapesByCanvas[style] = [];
+  }
+  shapes = [];
 }
+
+const clearButton = document.querySelector('#clearButton');
+
+clearButton.addEventListener('click', () => {
+  clearCanvases();
+});
 
 brushButton.addEventListener('click', () => {
   deactivateAllCanvasButtons(brushButton);

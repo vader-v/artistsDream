@@ -3,6 +3,8 @@ const l = document.querySelector('#lineCanvas');
 const b = document.querySelector('#brushCanvas');
 const t = document.querySelector('#triangleCanvas');
 const c = document.querySelector('#circleCanvas');
+const container = document.querySelector('.container')
+const gridSizeInput = document.querySelector('#gridSize')
 
 const rectangleCtx = r.getContext('2d');
 const lineCtx = l.getContext('2d');
@@ -10,14 +12,14 @@ const brushCtx = b.getContext('2d');
 const triangleCtx = t.getContext('2d');
 const circleCtx = c.getContext('2d');
 
-// Button click event listeners
 const brushButton = document.querySelector('#brushButton');
 const rectangleButton = document.querySelector('#rectangleSwitch');
 const circleButton = document.querySelector('#circleSwitch');
 const triangleButton = document.querySelector('#triangleSwitch');
 const lineButton = document.querySelector('#lineSwitch');
 
-// Resizing 
+const clearButton = document.querySelector('#clearButton');
+
 r.height = window.innerHeight;
 r.width = window.innerWidth;
 
@@ -33,7 +35,9 @@ t.width = window.innerWidth;
 c.height = window.innerHeight;
 c.width = window.innerWidth;
 
-// Variables
+container.height = window.innerHeight;
+container.width = window.innerWidth;
+
 let painting = false;
 let drawStyle = 'brush';
 const shapesByCanvas = {
@@ -43,26 +47,25 @@ const shapesByCanvas = {
   triangle: [],
   circle: [],
 };
-let shapes = []
+let shapes = [];
 
-// Variables for circle drawing
-let activeCircleShapeIndex = -1; // Index of the active circle being adjusted
-let activeShapeIndex = -1; // Index of the active shape being adjusted
-let offsetX = 0; // Offset between mouse and shape top-left corner
+let gridSize = parseInt(gridSizeInput.value);
+let snapToGrid = true;
+
+let activeCircleShapeIndex = -1;
+let activeShapeIndex = -1;
+let offsetX = 0;
 let offsetY = 0;
-let drawingRectangle = false; // Flag to track if a rectangle is currently being drawn
+let drawingRectangle = false;
 
-let activeCanvas = b; // Set initial active canvas
+let activeCanvas = b;
 
-// Variables for circle drawing
 let circleStartX, circleStartY;
 
-// Variables for triangle drawing
 let triangleStartX, triangleStartY;
 
 const canvasButtons = [brushButton, rectangleButton, circleButton, triangleButton, lineButton];
 
-// Function to deactivate all canvas buttons except the clicked one
 function deactivateAllCanvasButtons(clickedButton) {
   canvasButtons.forEach(button => {
     if (button !== clickedButton) {
@@ -72,25 +75,21 @@ function deactivateAllCanvasButtons(clickedButton) {
 }
 
 function setActiveCanvas(canvas, style) {
-  activeCanvas.style.zIndex = 0; // Set z-index of the previous active canvas to 0
+  activeCanvas.style.zIndex = 0;
   activeCanvas = canvas;
-  activeCanvas.style.zIndex = 1; // Set z-index of the new active canvas to 1
-
-  // Set the draw style based on the selected shape button
+  activeCanvas.style.zIndex = 1;
   drawStyle = style;
 
-  // Clear the shapes array for the previous canvas
   shapes = shapesByCanvas[drawStyle];
   activeShapeIndex = shapes.length - 1;
 }
 
 function start(e) {
   painting = true;
-  const canvasRect = r.getBoundingClientRect(); // Adjust based on current canvas
+  const canvasRect = r.getBoundingClientRect();
   const mouseX = e.clientX - canvasRect.left;
   const mouseY = e.clientY - canvasRect.top;
 
-  // Determine the context based on the current draw style and canvas
   let ctx;
   if (drawStyle === 'rectangle') {
     const newShape = {
@@ -112,7 +111,7 @@ function start(e) {
     ctx.lineWidth = 10;
   } else if (drawStyle === 'triangle') {
     ctx = triangleCtx;
-  } else   if (drawStyle === 'circle') {
+  } else if (drawStyle === 'circle') {
     const newCircle = {
       type: 'circle',
       x: mouseX,
@@ -121,7 +120,7 @@ function start(e) {
       resizing: false,
     };
     shapes.push(newCircle);
-    activeCircleShapeIndex = shapes.length - 1; // Store the index of the active circle
+    activeCircleShapeIndex = shapes.length - 1;
   }
   draw(e);
 }
@@ -130,7 +129,6 @@ function end() {
   painting = false;
   drawingRectangle = false;
 
-  // Determine the context based on the current draw style
   let ctx;
   if (drawStyle === 'rectangle') {
     ctx = rectangleCtx;
@@ -161,30 +159,44 @@ function redrawElements() {
     let shapeCtx;
     if (shape.type === 'rectangle') {
       shapeCtx = rectangleCtx;
-      shapeCtx.strokeRect(shape.x, shape.y, shape.width, shape.height);
+      const x = snapToGridValue(shape.x);
+      const y = snapToGridValue(shape.y);
+      const width = snapToGridValue(shape.width);
+      const height = snapToGridValue(shape.height);
+      shapeCtx.strokeRect(x, y, width, height);
     } else if (shape.type === 'circle') {
       shapeCtx = circleCtx;
+      const x = snapToGridValue(shape.x);
+      const y = snapToGridValue(shape.y);
+      const radius = snapToGridValue(shape.radius);
       shapeCtx.beginPath();
-      shapeCtx.arc(shape.x, shape.y, shape.radius, 0, 2 * Math.PI);
+      shapeCtx.arc(x, y, radius, 0, 2 * Math.PI);
       shapeCtx.stroke();
     } else if (shape.type === 'triangle') {
       shapeCtx = triangleCtx;
+      const x = snapToGridValue(shape.x);
+      const y = snapToGridValue(shape.y);
+      const width = snapToGridValue(shape.width);
+      const height = snapToGridValue(shape.height);
       shapeCtx.beginPath();
-      shapeCtx.moveTo(shape.x, shape.y);
-      shapeCtx.lineTo(shape.x + shape.width, shape.y + shape.height);
-      shapeCtx.lineTo(shape.x + shape.width, shape.y);
+      shapeCtx.moveTo(x, y);
+      shapeCtx.lineTo(x + width, y + height);
+      shapeCtx.lineTo(x + width, y);
       shapeCtx.closePath();
       shapeCtx.stroke();
     } else if (shape.type === 'line') {
       shapeCtx = lineCtx;
+      const x1 = snapToGridValue(shape.x1);
+      const y1 = snapToGridValue(shape.y1);
+      const x2 = snapToGridValue(shape.x2);
+      const y2 = snapToGridValue(shape.y2);
       shapeCtx.beginPath();
-      shapeCtx.moveTo(shape.x1, shape.y1);
-      shapeCtx.lineTo(shape.x2, shape.y2);
+      shapeCtx.moveTo(x1, y1);
+      shapeCtx.lineTo(x2, y2);
       shapeCtx.stroke();
     }
   }
 }
-
 
 function findActiveShape(x, y) {
   for (let i = shapes.length - 1; i >= 0; i--) {
@@ -223,7 +235,7 @@ function draw(e) {
   if (!painting || e.target.classList.contains('switch-label')) return;
 
   let ctx = activeCanvas.getContext('2d');
-  const canvasRect = activeCanvas.getBoundingClientRect(); // Adjust based on current canvas
+  const canvasRect = activeCanvas.getBoundingClientRect();
   const mouseX = e.clientX - canvasRect.left;
   const mouseY = e.clientY - canvasRect.top;
 
@@ -244,21 +256,10 @@ function draw(e) {
       redrawElements();
     }
   } else if (drawStyle === 'circle') {
-    if (activeCircleShapeIndex !== -1) {
+    if (activeCircleShapeIndex !== -1 && !drawingRectangle) {
       const shape = shapes[activeCircleShapeIndex];
-
-      // Clear the canvas
-      ctx.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
-
-      // Redraw existing shapes
-      redrawElements();
-
-      // Draw the circle
       shape.radius = Math.sqrt((mouseX - shape.x) ** 2 + (mouseY - shape.y) ** 2);
-      ctx.beginPath();
-      ctx.arc(shape.x, shape.y, shape.radius, 0, 2 * Math.PI);
-      ctx.stroke();
-
+      redrawCircle(shape);
     }
   } else if (drawStyle === 'triangle') {
     if (triangleStartX === undefined || triangleStartY === undefined) {
@@ -321,6 +322,18 @@ function draw(e) {
   }
 }
 
+function redrawCircle(circle) {
+  const x = snapToGridValue(circle.x);
+  const y = snapToGridValue(circle.y);
+  const radius = snapToGridValue(circle.radius);
+
+  circleCtx.clearRect(0, 0, c.width, c.height);
+  redrawElements();
+
+  circleCtx.beginPath();
+  circleCtx.arc(x, y, radius, 0, 2 * Math.PI);
+  circleCtx.stroke();
+}
 
 function clearCanvases() {
   rectangleCtx.clearRect(0, 0, r.width, r.height);
@@ -335,7 +348,17 @@ function clearCanvases() {
   shapes = [];
 }
 
-const clearButton = document.querySelector('#clearButton');
+function snapToGridValue(value) {
+  if (snapToGrid) {
+    return Math.round(value / gridSize) * gridSize;
+  }
+  return value;
+}
+
+gridSizeInput.addEventListener('input', (e) => {
+  gridSize = parseInt(e.target.value);
+  redrawElements();
+});
 
 clearButton.addEventListener('click', () => {
   clearCanvases();
@@ -419,4 +442,7 @@ window.addEventListener('resize', () => {
 
   t.height = window.innerHeight;
   t.width = window.innerWidth;
+
+  container.height = window.innerHeight
+  container.width = window.innerWidth
 });

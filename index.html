@@ -16,7 +16,14 @@
     <canvas id="circleCanvas"></canvas>
   </div>
   
+  
   <div class="switches">
+    
+    <div class="switch">
+      <label for="gridSize">Grid Size:</label>
+      <input type="range" id="gridSize" min="10" max="100" step="10" value="10">
+    </div>
+
       <button id="clearButton">Clear Canvas</button>
       <label class="switch">
         <input type="checkbox" id="brushButton" class="switch-input">
@@ -39,6 +46,7 @@
         <span class="switch-label">Line</span>
       </label>
     </div>
+
     <script src="canvas.js"></script>
   </body>
   </html>

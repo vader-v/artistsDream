@@ -446,3 +446,11 @@ window.addEventListener('resize', () => {
   container.height = window.innerHeight
   container.width = window.innerWidth
 });
+
+const toggleSwitchesButton = document.querySelector('#toggleSwitchesButton');
+const switches = document.querySelector('.switches');
+
+toggleSwitchesButton.addEventListener('click', () => {
+  switches.classList.toggle('show');
+  switches.classList.toggle('hide');
+});

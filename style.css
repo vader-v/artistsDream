@@ -14,19 +14,18 @@ body {
 }
 
 .canvas-container {
-  position: relative; /* Container needs to be positioned */
+  position: relative;
   width: 100%;
   height: 100%;
 }
 
 canvas {
-  position: absolute; /* Canvas elements will be positioned absolutely within the container */
+  position: absolute;
   top: 0;
   left: 0;
   border: 2px solid black;
 }
 
-/* Set z-index for the canvases based on your requirement */
 #brushCanvas {
   z-index: 1;
 }
@@ -45,12 +44,13 @@ canvas {
 
 .switches {
   position: absolute;
-  top: 20px; /* Adjust as needed */
-  left: 20px; /* Adjust as needed */
-  z-index: 10; /* Place the switches above the canvases */
-  /* Additional styling for the switches */
+  top: 20px;
+  left: 20px;
+  z-index: 10;
   border: 2px solid black;
   padding: 10px;
+  background: white;
+  transition: left 0.3s ease-in-out;
 }
 .switch {
   display: flex;
@@ -65,10 +65,13 @@ canvas {
 
 .switch-label {
   background-color: #ccc;
-  padding: 6px 12px;
+  padding: 10px 12px;
   border-radius: 20px;
   cursor: pointer;
   user-select: none;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 }
 
 .switch-input:checked + .switch-label {
@@ -89,4 +92,49 @@ canvas {
 
 #clearButton:hover {
   background-color: #d32f2f;
+}
+
+.color-field {
+  height: 40px;
+  width: 40px;
+  min-height: 40px;
+  min-width: 40px;
+  cursor: pointer;
+  box-sizing: border-box;
+  display: inline-block;
+} */
+
+.color-picker {
+  padding-left: 20px;
+}
+
+#toggleSwitchesButton {
+  position: absolute;
+  top: 25px;
+  right: -37px;
+  transform: translateY(-50%);
+  padding: 10px;
+  background-color: white;
+  color: black;
+  border: none;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  z-index: 10;
+  transition: right 0.3s ease-in-out;
+  border-top: 2px solid black;
+  border-right: 2px solid black;
+  border-bottom: 2px solid black;
+}
+
+#toggleSwitchesButton:hover {
+  background-color: #d9d9d9;
+  cursor: pointer;
+}
+
+.switches.show {
+  left: 0;
+}
+
+.switches.hide {
+  left: -230px;
 }

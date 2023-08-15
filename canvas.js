@@ -133,6 +133,8 @@ function start(e) {
     ctx = brushCtx;
     ctx.lineCap = 'round';
     ctx.lineWidth = 10;
+    ctx.beginPath();
+    ctx.moveTo(mouseX, mouseY);
   } else if (drawStyle === 'triangle') {
     ctx = triangleCtx;
   } else if (drawStyle === 'circle') {
@@ -373,10 +375,17 @@ function clearCanvases() {
   triangleCtx.clearRect(0, 0, t.width, t.height);
   circleCtx.clearRect(0, 0, c.width, c.height);
 
+  startX = undefined;
+  startY = undefined;
+
   for (const style in shapesByCanvas) {
     shapesByCanvas[style] = [];
   }
-  shapes = [];
+
+  drawGrid(rectangleCtx, gridSize);
+  drawGrid(lineCtx, gridSize);
+  drawGrid(triangleCtx, gridSize);
+  drawGrid(circleCtx, gridSize);
 }
 
 function snapToGridValue(value) {

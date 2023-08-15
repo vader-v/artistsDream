@@ -487,10 +487,15 @@ window.addEventListener('resize', () => {
   container.width = window.innerWidth
 });
 
+let toggleSwitchState = true;
+
 const toggleSwitchesButton = document.querySelector('#toggleSwitchesButton');
 const switches = document.querySelector('.switches');
 
 toggleSwitchesButton.addEventListener('click', () => {
+  toggleSwitchState = !toggleSwitchState;
   switches.classList.toggle('show');
   switches.classList.toggle('hide');
+
+  toggleSwitchesButton.innerText = toggleSwitchState ? '>>' : '<<';
 });

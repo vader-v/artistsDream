@@ -66,6 +66,30 @@ let triangleStartX, triangleStartY;
 
 const canvasButtons = [brushButton, rectangleButton, circleButton, triangleButton, lineButton];
 
+function drawGrid(context, gridSize) {
+  const canvasWidth = context.canvas.width;
+  const canvasHeight = context.canvas.height;
+  
+  context.clearRect(0, 0, canvasWidth, canvasHeight);
+  
+  context.strokeStyle = "rgba(0, 0, 0, 0.1)";
+  context.lineWidth = 0.5;
+  
+  for (let x = 0; x <= canvasWidth; x += gridSize) {
+    context.beginPath();
+    context.moveTo(x, 0);
+    context.lineTo(x, canvasHeight);
+    context.stroke();
+  }
+  
+  for (let y = 0; y <= canvasHeight; y += gridSize) {
+    context.beginPath();
+    context.moveTo(0, y);
+    context.lineTo(canvasWidth, y);
+    context.stroke();
+  }
+}
+
 function deactivateAllCanvasButtons(clickedButton) {
   canvasButtons.forEach(button => {
     if (button !== clickedButton) {
@@ -153,8 +177,10 @@ function end() {
 
 function redrawElements() {
   const ctx = activeCanvas.getContext('2d');
-  ctx.clearRect(0, 0, activeCanvas.width, activeCanvas.height); // Clear only the active canvas
-
+  
+  ctx.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
+  
+  drawGrid(ctx, gridSize);
   for (const shape of shapes) {
     let shapeCtx;
     if (shape.type === 'rectangle') {
@@ -163,12 +189,14 @@ function redrawElements() {
       const y = snapToGridValue(shape.y);
       const width = snapToGridValue(shape.width);
       const height = snapToGridValue(shape.height);
+      shapeCtx.strokeStyle = "rgba(0, 0, 0, 0.5)"; // Set stroke style with alpha
       shapeCtx.strokeRect(x, y, width, height);
     } else if (shape.type === 'circle') {
       shapeCtx = circleCtx;
       const x = snapToGridValue(shape.x);
       const y = snapToGridValue(shape.y);
       const radius = snapToGridValue(shape.radius);
+      shapeCtx.strokeStyle = "rgba(0, 0, 0, 0.5)"; // Set stroke style with alpha
       shapeCtx.beginPath();
       shapeCtx.arc(x, y, radius, 0, 2 * Math.PI);
       shapeCtx.stroke();
@@ -178,6 +206,7 @@ function redrawElements() {
       const y = snapToGridValue(shape.y);
       const width = snapToGridValue(shape.width);
       const height = snapToGridValue(shape.height);
+      shapeCtx.strokeStyle = "rgba(0, 0, 0, 0.5)"; // Set stroke style with alpha
       shapeCtx.beginPath();
       shapeCtx.moveTo(x, y);
       shapeCtx.lineTo(x + width, y + height);
@@ -190,6 +219,7 @@ function redrawElements() {
       const y1 = snapToGridValue(shape.y1);
       const x2 = snapToGridValue(shape.x2);
       const y2 = snapToGridValue(shape.y2);
+      shapeCtx.strokeStyle = "rgba(0, 0, 0, 0.5)"; // Set stroke style with alpha
       shapeCtx.beginPath();
       shapeCtx.moveTo(x1, y1);
       shapeCtx.lineTo(x2, y2);
@@ -197,6 +227,7 @@ function redrawElements() {
     }
   }
 }
+
 
 function findActiveShape(x, y) {
   for (let i = shapes.length - 1; i >= 0; i--) {
@@ -357,8 +388,17 @@ function snapToGridValue(value) {
 
 gridSizeInput.addEventListener('input', (e) => {
   gridSize = parseInt(e.target.value);
+  drawGrid(rectangleCtx, gridSize); // Update the grid for all canvases
+  drawGrid(lineCtx, gridSize);
+  drawGrid(circleCtx, gridSize);
+  drawGrid(triangleCtx, gridSize);
   redrawElements();
 });
+
+drawGrid(rectangleCtx, gridSize);
+drawGrid(lineCtx, gridSize);
+drawGrid(circleCtx, gridSize);
+drawGrid(triangleCtx, gridSize);
 
 clearButton.addEventListener('click', () => {
   clearCanvases();

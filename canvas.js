@@ -165,6 +165,8 @@ function end() {
   } else if (drawStyle === 'line') {
     if (!drawingRectangle) {
       ctx = lineCtx;
+      ctx.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
+      redrawElements();
     }
   } else if (drawStyle === 'brush') {
     ctx = brushCtx;
@@ -172,6 +174,8 @@ function end() {
   } else if (drawStyle === 'triangle') {
     if (!drawingRectangle) {
       ctx = triangleCtx;
+      ctx.clearRect(0, 0, activeCanvas.width, activeCanvas.height);
+      redrawElements();
     }
   } else if (drawStyle === 'circle') {
     if (!drawingRectangle) {
@@ -233,7 +237,6 @@ function redrawElements() {
     }
   }
 }
-
 
 function findActiveShape(x, y) {
   for (let i = shapes.length - 1; i >= 0; i--) {

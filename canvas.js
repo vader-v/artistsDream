@@ -381,6 +381,7 @@ function clearCanvases() {
   for (const style in shapesByCanvas) {
     shapesByCanvas[style] = [];
   }
+  shapes = [];
 
   drawGrid(rectangleCtx, gridSize);
   drawGrid(lineCtx, gridSize);

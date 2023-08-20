@@ -5,6 +5,7 @@ const t = document.querySelector('#triangleCanvas');
 const c = document.querySelector('#circleCanvas');
 const container = document.querySelector('.container')
 const gridSizeInput = document.querySelector('#gridSize')
+const brushSizeInput = document.querySelector('#brush-size')
 
 const rectangleCtx = r.getContext('2d');
 const lineCtx = l.getContext('2d');
@@ -48,6 +49,9 @@ const shapesByCanvas = {
   circle: [],
 };
 let shapes = [];
+
+let prevMouseX;
+let prevMouseY;
 
 let gridSize = parseInt(gridSizeInput.value);
 let snapToGrid = true;
@@ -111,15 +115,15 @@ function setActiveCanvas(canvas, style) {
 function start(e) {
   painting = true;
   const canvasRect = r.getBoundingClientRect();
-  const mouseX = e.clientX - canvasRect.left;
-  const mouseY = e.clientY - canvasRect.top;
+  prevMouseX = e.clientX - canvasRect.left;
+  prevMouseY = e.clientY - canvasRect.top;
 
   let ctx;
   if (drawStyle === 'rectangle') {
     const newShape = {
       type: 'rectangle',
-      x: mouseX,
-      y: mouseY,
+      x: prevMouseX,
+      y: prevMouseY,
       width: 0,
       height: 0,
       resizing: false,
@@ -132,16 +136,16 @@ function start(e) {
   } else if (drawStyle === 'brush') {
     ctx = brushCtx;
     ctx.lineCap = 'round';
-    ctx.lineWidth = 10;
+    ctx.lineWidth = parseInt(brushSizeInput.value);
     ctx.beginPath();
-    ctx.moveTo(mouseX, mouseY);
+    ctx.moveTo(prevMouseX, prevMouseY);
   } else if (drawStyle === 'triangle') {
     ctx = triangleCtx;
   } else if (drawStyle === 'circle') {
     const newCircle = {
       type: 'circle',
-      x: mouseX,
-      y: mouseY,
+      x: prevMouseX,
+      y: prevMouseY,
       radius: 0,
       resizing: false,
     };
@@ -273,12 +277,26 @@ function draw(e) {
   const mouseY = e.clientY - canvasRect.top;
 
   if (drawStyle === 'brush') {
-    ctx = brushCtx;
+    const distance = Math.sqrt((mouseX - prevMouseX) ** 2 + (mouseY - prevMouseY) ** 2);
+    const step = 0.1; // Adjust this value to control the frequency of intermediate points
+
+    for (let t = 0; t <= 1; t += step / distance) {
+      const interpX = prevMouseX + t * (mouseX - prevMouseX);
+      const interpY = prevMouseY + t * (mouseY - prevMouseY);
+
+      brushCtx.lineTo(interpX, interpY);
+      brushCtx.stroke();
+    }
+
+    // Update prevMouseX and prevMouseY
+    prevMouseX = mouseX;
+    prevMouseY = mouseY;
+
     if (!drawingRectangle) {
-      ctx.lineTo(mouseX, mouseY);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(mouseX, mouseY);
+      brushCtx.lineTo(mouseX, mouseY);
+      brushCtx.stroke();
+      brushCtx.beginPath();
+      brushCtx.moveTo(mouseX, mouseY);
     }
   } else if (drawStyle === 'rectangle') {
     ctx = rectangleCtx;
@@ -508,4 +526,9 @@ toggleSwitchesButton.addEventListener('click', () => {
   switches.classList.toggle('hide');
 
   toggleSwitchesButton.innerText = toggleSwitchState ? '>>' : '<<';
+});
+
+brushSizeInput.addEventListener('input', (e) => {
+  const newBrushSize = parseInt(e.target.value);
+  brushCtx.lineWidth = newBrushSize;
 });

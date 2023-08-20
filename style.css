@@ -102,7 +102,10 @@ canvas {
   cursor: pointer;
   box-sizing: border-box;
   display: inline-block;
-} */
+  border: black 2px solid;
+  border-radius: 10px;
+  margin-right: 5px;
+}
 
 .color-picker {
   padding-left: 20px;

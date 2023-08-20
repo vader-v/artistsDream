@@ -420,7 +420,6 @@ gridSizeInput.addEventListener('input', (e) => {
   drawGrid(lineCtx, gridSize);
   drawGrid(circleCtx, gridSize);
   drawGrid(triangleCtx, gridSize);
-  redrawElements();
 });
 
 drawGrid(rectangleCtx, gridSize);

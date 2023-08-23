@@ -18,6 +18,11 @@ const rectangleButton = document.querySelector('#rectangleSwitch');
 const circleButton = document.querySelector('#circleSwitch');
 const triangleButton = document.querySelector('#triangleSwitch');
 const lineButton = document.querySelector('#lineSwitch');
+const colorFields = document.querySelectorAll('.color-field');
+const colorPicker = document.getElementById('color-picker');
+const submitColorButton = document.getElementById('submit-color');
+
+let selectedColor = colorFields[0].style.background;
 
 const clearButton = document.querySelector('#clearButton');
 
@@ -127,6 +132,7 @@ function start(e) {
       width: 0,
       height: 0,
       resizing: false,
+      strokeStyle: selectedColor,
     };
     shapes.push(newShape);
     activeShapeIndex = shapes.length - 1;
@@ -148,6 +154,7 @@ function start(e) {
       y: prevMouseY,
       radius: 0,
       resizing: false,
+      strokeStyle: selectedColor,
     };
     shapes.push(newCircle);
     activeCircleShapeIndex = shapes.length - 1;
@@ -199,14 +206,14 @@ function redrawElements() {
       const y = snapToGridValue(shape.y);
       const width = snapToGridValue(shape.width);
       const height = snapToGridValue(shape.height);
-      shapeCtx.strokeStyle = "rgba(0, 0, 0, 0.5)"; // Set stroke style with alpha
+      shapeCtx.strokeStyle = shape.strokeStyle; // Set stroke style with alpha
       shapeCtx.strokeRect(x, y, width, height);
     } else if (shape.type === 'circle') {
       shapeCtx = circleCtx;
       const x = snapToGridValue(shape.x);
       const y = snapToGridValue(shape.y);
       const radius = snapToGridValue(shape.radius);
-      shapeCtx.strokeStyle = "rgba(0, 0, 0, 0.5)"; // Set stroke style with alpha
+      shapeCtx.strokeStyle = shape.strokeStyle; // Set stroke style with alpha
       shapeCtx.beginPath();
       shapeCtx.arc(x, y, radius, 0, 2 * Math.PI);
       shapeCtx.stroke();
@@ -216,7 +223,7 @@ function redrawElements() {
       const y = snapToGridValue(shape.y);
       const width = snapToGridValue(shape.width);
       const height = snapToGridValue(shape.height);
-      shapeCtx.strokeStyle = "rgba(0, 0, 0, 0.5)"; // Set stroke style with alpha
+      shapeCtx.strokeStyle = shape.strokeStyle; // Set stroke style with alpha
       shapeCtx.beginPath();
       shapeCtx.moveTo(x, y);
       shapeCtx.lineTo(x + width, y + height);
@@ -229,7 +236,7 @@ function redrawElements() {
       const y1 = snapToGridValue(shape.y1);
       const x2 = snapToGridValue(shape.x2);
       const y2 = snapToGridValue(shape.y2);
-      shapeCtx.strokeStyle = "rgba(0, 0, 0, 0.5)"; // Set stroke style with alpha
+      shapeCtx.strokeStyle = shape.strokeStyle; // Set stroke style with alpha
       shapeCtx.beginPath();
       shapeCtx.moveTo(x1, y1);
       shapeCtx.lineTo(x2, y2);
@@ -329,6 +336,7 @@ function draw(e) {
         width: 0,
         height: 0,
         resizing: false,
+        strokeStyle: selectedColor,
       };
       shapes.push(newTriangle);
       drawingRectangle = true;
@@ -357,6 +365,7 @@ function draw(e) {
         x2: mouseX,
         y2: mouseY,
         resizing: false,
+        strokeStyle: selectedColor,
       };
       shapes.push(newLine);
       drawingRectangle = true;
@@ -515,6 +524,11 @@ window.addEventListener('resize', () => {
 
   container.height = window.innerHeight
   container.width = window.innerWidth
+
+  drawGrid(rectangleCtx, gridSize);
+  drawGrid(lineCtx, gridSize);
+  drawGrid(circleCtx, gridSize);
+  drawGrid(triangleCtx, gridSize);
 });
 
 let toggleSwitchState = true;
@@ -534,3 +548,34 @@ brushSizeInput.addEventListener('input', (e) => {
   const newBrushSize = parseInt(e.target.value);
   brushCtx.lineWidth = newBrushSize;
 });
+
+// Event listener for color fields
+colorFields.forEach((field, index) => {
+  field.addEventListener('click', () => {
+    if (index === 0) {
+      // Update the background color for the white color field using color picker
+      selectedColor = colorPicker.value;
+      field.style.background = selectedColor;
+    } else {
+      // Update the background color for the clicked color field
+      field.style.background = field.dataset.color;
+      selectedColor = field.dataset.color;
+      updateSelectedColor();
+    }
+  });
+});
+
+
+submitColorButton.addEventListener('click', () => {
+  selectedColor = colorPicker.value;
+  updateSelectedColor();
+});
+
+function updateSelectedColor() {
+  colorFields[0].style.background = selectedColor;
+  rectangleCtx.strokeStyle = selectedColor;
+  lineCtx.strokeStyle = selectedColor;
+  brushCtx.strokeStyle = selectedColor;
+  triangleCtx.strokeStyle = selectedColor;
+  circleCtx.strokeStyle = selectedColor;
+}

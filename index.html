@@ -21,9 +21,18 @@
     <button id="toggleSwitchesButton">>></button>
     
     <div class="switch">
-      <label for="gridSize">Grid Size:</label>
-      <input type="range" id="gridSize" min="10" max="100" step="10" value="10">
+      <span class="switch-label">
+        <label for="gridSize">Grid Size:</label>
+        <input type="range" id="gridSize" min="10" max="100" step="10" value="10">
+      </span>
     </div>
+
+    <label for="brush-size" class="switch">
+      <span class="switch-label">
+        Brush Size:
+        <input type="range" min="1" max="100" value="40" id="brush-size" class="switch">
+      </span> 
+    </label>
 
       <button id="clearButton">Clear Canvas</button>
 
@@ -32,48 +41,78 @@
           Undo
         </button>
       </label> -->
-
       <label for="color-picker-container">
         <span class="switch-label">
           Color:
           <input type="color" id="color-picker">
+          <button id="submit-color">Apply</button>
         </span>
       </label>
 
       <label for="colors" class="switch">
-        <div class="color-field" style="background: red;"></div>
-        <div class="color-field" style="background: blue;"></div>
-        <div class="color-field" style="background: green;"></div>
-        <div class="color-field" style="background: yellow;"></div>
-      </label>
-
-      <label for="brush-size" class="switch">
         <span class="switch-label">
-          Brush Size:
-          <input type="range" min="1" max="100" value="70" id="brush-size" class="switch">
-        </span> 
+          Colors:
+          <label for="current-color">Current Color:</label>
+          <div class="color-field" id="current-color" style="background: rgb(102, 206, 171);"></div>
+        </span>
+        <span class="switch-label">
+          <div class="color-field" style="background: red;" data-color="red"></div>
+          <div class="color-field" style="background: blue;" data-color="blue"></div>
+        </span>
+
+        <span class="switch-label">
+          <div class="color-field" style="background: green;" data-color="green"></div>
+          <div class="color-field" style="background: yellow;" data-color="yellow"></div>
+        </span>
       </label>
 
-      <label class="switch">
-        <input type="checkbox" id="brushButton" class="switch-input">
-        <span class="switch-label">Brush</span>
-      </label>
-      <label class="switch">
-        <input type="checkbox" id="rectangleSwitch" class="switch-input">
-        <span class="switch-label">Rectangle</span>
-      </label>
-      <label class="switch">
-        <input type="checkbox" id="circleSwitch" class="switch-input">
-        <span class="switch-label">Circle</span>
-      </label>
-      <label class="switch">
-        <input type="checkbox" id="triangleSwitch" class="switch-input">
-        <span class="switch-label">Triangle</span>
-      </label>
-      <label class="switch">
-        <input type="checkbox" id="lineSwitch" class="switch-input">
-        <span class="switch-label">Line</span>
-      </label>
+      <div class="switch">
+
+        <span class="switch-label">
+        
+          <label class="switch">
+            <input type="checkbox" id="brushButton" class="switch-input">
+            <span class="switch-label">
+              Brush
+            </span>
+          </label>
+
+          <label class="switch">
+            <input type="checkbox" id="rectangleSwitch" class="switch-input">
+            <span class="switch-label">
+              Rectangle
+            </span>
+          </label>
+          
+          <label class="switch">
+            <input type="checkbox" id="circleSwitch" class="switch-input">
+            <span class="switch-label">
+              Circle
+            </span>
+          </label>
+
+        </span>
+
+        <span class="switch-label">
+
+          <label class="switch">
+            <input type="checkbox" id="triangleSwitch" class="switch-input">
+            <span class="switch-label">
+              Triangle
+            </span>
+          </label>
+          
+          <label class="switch">
+            <input type="checkbox" id="lineSwitch" class="switch-input">
+            <span class="switch-label">
+              Line
+            </span>
+          </label>
+
+        </span>
+
+      </div>
+
     </div>
 
     <script src="canvas.js"></script>

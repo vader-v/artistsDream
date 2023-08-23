@@ -112,17 +112,18 @@ function setActiveCanvas(canvas, style) {
   activeCanvas = canvas;
   activeCanvas.style.zIndex = 1;
   drawStyle = style;
-
+  
   shapes = shapesByCanvas[drawStyle];
   activeShapeIndex = shapes.length - 1;
 }
 
+updateSelectedColor();
 function start(e) {
   painting = true;
   const canvasRect = r.getBoundingClientRect();
   prevMouseX = e.clientX - canvasRect.left;
   prevMouseY = e.clientY - canvasRect.top;
-
+  
   let ctx;
   if (drawStyle === 'rectangle') {
     const newShape = {
@@ -145,6 +146,7 @@ function start(e) {
     ctx.lineWidth = parseInt(brushSizeInput.value);
     ctx.beginPath();
     ctx.moveTo(prevMouseX, prevMouseY);
+    strokeStyle = selectedColor;
   } else if (drawStyle === 'triangle') {
     ctx = triangleCtx;
   } else if (drawStyle === 'circle') {
@@ -507,28 +509,22 @@ c.addEventListener('mouseout', end);
 c.addEventListener('mousemove', draw);
 
 window.addEventListener('resize', () => {
-  c.height = window.innerHeight;
-  c.width = window.innerWidth;
-
-  r.height = window.innerHeight;
-  r.width = window.innerWidth;
-
-  l.height = window.innerHeight;
-  l.width = window.innerWidth;
-
-  b.height = window.innerHeight;
-  b.width = window.innerWidth;
-
-  t.height = window.innerHeight;
-  t.width = window.innerWidth;
-
-  container.height = window.innerHeight
-  container.width = window.innerWidth
-
-  drawGrid(rectangleCtx, gridSize);
-  drawGrid(lineCtx, gridSize);
-  drawGrid(circleCtx, gridSize);
-  drawGrid(triangleCtx, gridSize);
+    const canvasList = [r, l, b, t, c];
+    
+    // Update the dimensions of all canvases
+    canvasList.forEach(canvas => {
+      canvas.height = window.innerHeight;
+      canvas.width = window.innerWidth;
+    });
+  
+    // Redraw all shapes on their corresponding canvas contexts
+    for (const canvas of canvasList) {
+      const ctx = canvas.getContext('2d');
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawGrid(ctx, gridSize); // Redraw grid
+      redrawElements();
+      updateSelectedColor();
+    }
 });
 
 let toggleSwitchState = true;

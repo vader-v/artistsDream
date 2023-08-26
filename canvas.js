@@ -21,6 +21,14 @@ const lineButton = document.querySelector('#lineSwitch');
 const colorFields = document.querySelectorAll('.color-field');
 const colorPicker = document.getElementById('color-picker');
 const submitColorButton = document.getElementById('submit-color');
+const squareTipCheckbox = document.getElementById('square-tip');
+const roundTipCheckbox = document.getElementById('round-tip');
+
+const brushSettings = document.querySelector('.brush-settings');
+const hideBrushSettingsButton = document.querySelector('.hide-brush-settings');
+
+const availableBrushTips = ['round', 'square'];
+let selectedBrushTip = 'round';
 
 let selectedColor = colorFields[0].style.background;
 
@@ -107,6 +115,14 @@ function deactivateAllCanvasButtons(clickedButton) {
   });
 }
 
+function deactivateAllBrushButtons(clickedButton) {
+  brushSettings.forEach(button => {
+    if (button !== clickedButton) {
+      button.checked = false;
+    }
+  });
+}
+
 function setActiveCanvas(canvas, style) {
   activeCanvas.style.zIndex = 0;
   activeCanvas = canvas;
@@ -117,7 +133,23 @@ function setActiveCanvas(canvas, style) {
   activeShapeIndex = shapes.length - 1;
 }
 
+roundTipCheckbox.addEventListener('change', () => {
+  if (roundTipCheckbox.checked) {
+    squareTipCheckbox.checked = false;
+    brushCtx.lineCap = 'round';
+  }
+});
+
+squareTipCheckbox.addEventListener('change', () => {
+  if (squareTipCheckbox.checked) {
+    roundTipCheckbox.checked = false;
+    brushCtx.lineCap = 'square';
+  }
+});
+
 updateSelectedColor();
+brushCtx.lineCap = 'round';
+
 function start(e) {
   painting = true;
   const canvasRect = r.getBoundingClientRect();
@@ -142,7 +174,7 @@ function start(e) {
     ctx = lineCtx;
   } else if (drawStyle === 'brush') {
     ctx = brushCtx;
-    ctx.lineCap = 'round';
+    ctx.lineCap = 'selectedBrushTip';
     ctx.lineWidth = parseInt(brushSizeInput.value);
     ctx.beginPath();
     ctx.moveTo(prevMouseX, prevMouseY);
@@ -167,7 +199,7 @@ function start(e) {
 function end() {
   painting = false;
   drawingRectangle = false;
-
+  
   let ctx;
   if (drawStyle === 'rectangle') {
     ctx = rectangleCtx;
@@ -254,12 +286,12 @@ function findActiveShape(x, y) {
       (shape.type === 'rectangle' && x >= shape.x && x <= shape.x + shape.width && y >= shape.y && y <= shape.y + shape.height) ||
       (shape.type === 'circle' && Math.sqrt((x - shape.x) ** 2 + (y - shape.y) ** 2) <= shape.radius) ||
       (shape.type === 'triangle' && pointInTriangle(x, y, shape))
-    ) {
-      return i;
+      ) {
+        return i;
+      }
     }
+    return -1;
   }
-  return -1;
-}
 
 function pointInTriangle(x, y, triangle) {
   const x1 = triangle.x;
@@ -509,22 +541,22 @@ c.addEventListener('mouseout', end);
 c.addEventListener('mousemove', draw);
 
 window.addEventListener('resize', () => {
-    const canvasList = [r, l, b, t, c];
-    
-    // Update the dimensions of all canvases
-    canvasList.forEach(canvas => {
-      canvas.height = window.innerHeight;
-      canvas.width = window.innerWidth;
-    });
+  const canvasList = [r, l, b, t, c];
   
-    // Redraw all shapes on their corresponding canvas contexts
-    for (const canvas of canvasList) {
-      const ctx = canvas.getContext('2d');
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      drawGrid(ctx, gridSize); // Redraw grid
-      redrawElements();
-      updateSelectedColor();
-    }
+  // Update the dimensions of all canvases
+  canvasList.forEach(canvas => {
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+  });
+
+  // Redraw all shapes on their corresponding canvas contexts
+  for (const canvas of canvasList) {
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawGrid(ctx, gridSize); // Redraw grid
+    redrawElements();
+    updateSelectedColor();
+  }
 });
 
 let toggleSwitchState = true;
@@ -575,3 +607,15 @@ function updateSelectedColor() {
   triangleCtx.strokeStyle = selectedColor;
   circleCtx.strokeStyle = selectedColor;
 }
+
+brushButton.addEventListener('change', () => {
+  if (brushButton.checked) {
+    brushSettings.style.display = 'flex';
+  } else {
+    brushSettings.style.display = 'none';
+  }
+});
+
+hideBrushSettingsButton.addEventListener('click', () => {
+  brushSettings.style.display = 'none';
+});

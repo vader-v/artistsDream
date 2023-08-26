@@ -41,20 +41,69 @@ canvas {
 
 .switches {
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 10px;
+  left: 10px;
   max-height: 100vh;
   z-index: 10;
   border: 2px solid black;
   padding: 10px;
   background: white;
   transition: left 0.3s ease-in-out;
+  border-radius: 0 4px 4px 0;
 }
+
+.brush-settings {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  border: 2px solid black;
+  border-radius: 5px;
+  position: absolute;
+  width: 200px;
+  height: 240px;
+  display: none;
+}
+
+.hide-brush-settings {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  background-color: #f44336;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  transition: background-color 0.3s ease-in-out;
+  box-shadow: #d32f2f 0px 0px 2px;
+}
+
+.hide-brush-settings:hover {
+  background-color: #d32f2f;
+}
+
+.hide-brush-settings::before {
+  content: "X";
+  display: inline-block;
+  align-items: center;
+  transform: translate(-1px, -1px);
+}
+
+#brushButton:checked + .brush-settings {
+  display: flex;
+}
+
 .switch {
   display: flex;
   align-items: center;
   padding: 2px;
-
 }
 
 .switch-input {
@@ -82,7 +131,8 @@ canvas {
 }
 
 #clearButton {
-  margin-top: 10px;
+  margin-top: 5px;
+  margin-bottom: 5px;
   padding: 6px 12px;
   background-color: #f44336;
   color: white;
@@ -104,7 +154,6 @@ canvas {
   display: inline-block;
   border: black 2px solid;
   border-radius: 10px;
-  margin-right: 5px;
 }
 
 .color-picker {
@@ -139,5 +188,5 @@ canvas {
 }
 
 .switches.hide {
-  left: -245px;
+  left: -270px;
 }

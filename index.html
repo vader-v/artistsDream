@@ -27,22 +27,16 @@
       </span>
     </div>
 
-    <label for="brush-size" class="switch">
+    
+    <button id="clearButton">Clear Canvas</button>
+    
+    <!-- <label for="undo" class="switch">
+      <button type="button" class="button">
+        Undo
+      </button>
+    </label> -->
+    <label for="color-picker-container">
       <span class="switch-label">
-        Brush Size:
-        <input type="range" min="1" max="100" value="40" id="brush-size" class="switch">
-      </span> 
-    </label>
-
-      <button id="clearButton">Clear Canvas</button>
-
-      <!-- <label for="undo" class="switch">
-        <button type="button" class="button">
-          Undo
-        </button>
-      </label> -->
-      <label for="color-picker-container">
-        <span class="switch-label">
           Color:
           <input type="color" id="color-picker">
           <button id="submit-color">Apply</button>
@@ -51,7 +45,6 @@
 
       <label for="colors" class="switch">
         <span class="switch-label">
-          Colors:
           <label for="current-color">Current Color:</label>
           <div class="color-field" id="current-color" style="background: rgb(102, 206, 171);"></div>
         </span>
@@ -59,24 +52,56 @@
           <div class="color-field" style="background: red;" data-color="red"></div>
           <div class="color-field" style="background: blue;" data-color="blue"></div>
         </span>
-
         <span class="switch-label">
           <div class="color-field" style="background: green;" data-color="green"></div>
           <div class="color-field" style="background: yellow;" data-color="yellow"></div>
         </span>
+        <span class="switch-label">
+          <div class="color-field" style="background: black;" data-color="black"></div>
+          <div class="color-field" style="background: white;" data-color="white"></div>
+        </span>
       </label>
 
-      <div class="switch">
+      <div class="brush-settings">
+        <label for="hide-brush-settings" class="hide-brush-settings">
+          <button class="hide-brush-settings">
+          </button>
+        </label>
 
-        <span class="switch-label">
+        <label for="brush-size" class="switch">
+          <span class="switch-label">
+            Brush Size:
+            <input type="range" min="1" max="100" step="1" value="40" id="brush-size" class="switch">
+          </span> 
+        </label>
+
+        <label class="switch">
+          <input type="checkbox" id="square-tip" class="switch-input">
+          <span class="switch-label">
+            Square Tip 
+          </span>
+        </label>
+
+        <label class="switch">
+          <input type="checkbox" id="round-tip" checked class="switch-input">
+          <span class="switch-label">
+            Round Tip 
+          </span>
+        </label>
+
+      </div>
+      
+      <div class="switch">
         
+        <span class="switch-label">
+          
           <label class="switch">
-            <input type="checkbox" id="brushButton" class="switch-input">
+            <input type="checkbox" id="brushButton" checked class="switch-input">
             <span class="switch-label">
               Brush
             </span>
           </label>
-
+          
           <label class="switch">
             <input type="checkbox" id="rectangleSwitch" class="switch-input">
             <span class="switch-label">
@@ -90,11 +115,11 @@
               Circle
             </span>
           </label>
-
+          
         </span>
-
+        
         <span class="switch-label">
-
+          
           <label class="switch">
             <input type="checkbox" id="triangleSwitch" class="switch-input">
             <span class="switch-label">
@@ -108,13 +133,13 @@
               Line
             </span>
           </label>
-
+          
         </span>
-
+        
       </div>
-
+      
     </div>
-
+    
     <script src="canvas.js"></script>
   </body>
-  </html>
+</html>
